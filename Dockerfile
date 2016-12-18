@@ -22,7 +22,10 @@ RUN yum -y update && \
     chmod 755 /usr/src/iRedMail/run_mailserver.sh  && \
     bash /usr/src/iRedMail/pkgs_install.sh && \
     mkdir -p /etc/pki/tls/mailserver /var/vmail
-
+RUN bash -c "source /usr/src/iRedMail/build.sh;\
+    perm_change_ugid mysql 1501; \
+    perm_change_ugid vmail 2000;\
+    perm_change_ugid cluebringer 2001; "
 VOLUME ["/var/log"]
 VOLUME ["/var/lib/mysql"]
 VOLUME ["/var/vmail"]
