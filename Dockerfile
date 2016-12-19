@@ -3,7 +3,6 @@ MAINTAINER Ascensio System SIA <support@onlyoffice.com>
 
 ADD iRedMail.repo /etc/yum.repos.d/iRedMail.repo
 ADD iRedMail /usr/src/iRedMail/
-RUN mkdir /var/run/mysqld && chown mysql:mysql /var/run/mysqld
 RUN yum -y update && \
     yum clean metadata && \
     sed -i "s/tsflags=nodocs//g" /etc/yum.conf && \
@@ -15,18 +14,19 @@ RUN yum -y update && \
     yum -y install python-sqlalchemy python-setuptools MySQL-python  awstats && \
     yum -y install libopendkim libopendkim-devel mysql-devel readline-devel gcc gcc-c++ sendmail-milter sendmail-devel libbsd-devel && \
     yum -y install readline libyaml-devel libffi-devel openssl-devel bison && \
-    yum -y install curl-devel httpd-devel sqlite-devel which libtool unzip bzip2 acl patch tmpwatch crontabs dos2unix logwatch crond && \
+    yum -y install curl-devel httpd-devel sqlite-devel which libtool unzip bzip2 acl patch tmpwatch crontabs dos2unix logwatch crond
+RUN bash -c "source /usr/src/iRedMail/build.sh;\
+    perm_change_ugid mysql 1501; \
+    perm_change_ugid vmail 2000;\
+    perm_change_ugid cluebringer 2001; "
+RUN [ -d /var/run/mysqld ] && chown mysql:mysql /var/run/mysqld;\
     find /usr/src/iRedMail -type d -name pkgs -prune -o -type f -exec dos2unix {} \; && \
     chmod 755 /usr/src/iRedMail/pkgs_install.sh && \
     chmod 755 /usr/src/iRedMail/iRedMail.sh && \
     chmod 755 /usr/src/iRedMail/run_mailserver.sh  && \
     bash /usr/src/iRedMail/pkgs_install.sh && \
     mkdir -p /etc/pki/tls/mailserver /var/vmail
-RUN bash -c "source /usr/src/iRedMail/build.sh;\
-    perm_change_ugid mysql 1501; \
-    perm_change_ugid vmail 2000;\
-    perm_change_ugid cluebringer 2001; "
-RUN [ -d /var/run/mysqld ] && chown mysql:mysql /var/run/mysqld
+
 VOLUME ["/var/log"]
 VOLUME ["/var/lib/mysql"]
 VOLUME ["/var/vmail"]
