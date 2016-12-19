@@ -3,7 +3,7 @@ MAINTAINER Ascensio System SIA <support@onlyoffice.com>
 
 ADD iRedMail.repo /etc/yum.repos.d/iRedMail.repo
 ADD iRedMail /usr/src/iRedMail/
-
+RUN mkdir /var/run/mysqld && chown mysql:mysql /var/run/mysqld
 RUN yum -y update && \
     yum clean metadata && \
     sed -i "s/tsflags=nodocs//g" /etc/yum.conf && \
