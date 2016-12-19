@@ -26,6 +26,7 @@ RUN bash -c "source /usr/src/iRedMail/build.sh;\
     perm_change_ugid mysql 1501; \
     perm_change_ugid vmail 2000;\
     perm_change_ugid cluebringer 2001; "
+RUN [ -d /var/run/mysqld ] && chown mysql:mysql /var/run/mysqld
 VOLUME ["/var/log"]
 VOLUME ["/var/lib/mysql"]
 VOLUME ["/var/vmail"]
