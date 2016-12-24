@@ -90,7 +90,7 @@ function sigterm_handler() {
     service spamassassin stop
     service fail2ban stop
     service spamtrainer stop
-    service mysql stop
+    service mysqld stop
 	exit 0
 }
 
