@@ -75,3 +75,24 @@ service spamtrainer start
 rm -f ${MYSQL_DEFAULTS_FILE_ROOT} &>/dev/null
 rm -f ${TMP_SQL} 2>/dev/null
 unset TMP_SQL
+function sigterm_handler() {
+    echo "SIGTERM signal received, try to gracefully shutdown all services..."
+    service crond stop
+    service dovecot stop
+    service rsyslog stop
+    service amavisd stop
+    service postfix stop
+    service cbpolicyd stop
+    service clamd stop
+    service clamd.amavisd stop
+    service httpd stop
+    service opendkim stop
+    service spamassassin stop
+    service fail2ban stop
+    service spamtrainer stop
+    service mysql stop
+	exit 0
+}
+
+trap "sigterm_handler; exit" TERM
+while((1));do sleep 10; done;
